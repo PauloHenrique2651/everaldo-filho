@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
 export function useReducedMotion() {
-  const [reduced, setReduced] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData === true);
+  // Frame-by-frame canvas animation looks great on a desktop GPU, but on phones
+  // it competes directly with native scrolling. Treat compact viewports as a
+  // static, intentional composition instead of asking the browser to decode
+  // hundreds of images while the user is swiping.
+  const [reduced, setReduced] = useState(() => matchMedia('(prefers-reduced-motion: reduce), (max-width: 700px)').matches || navigator.connection?.saveData === true);
   useEffect(() => {
-    const query = matchMedia('(prefers-reduced-motion: reduce)');
+    const query = matchMedia('(prefers-reduced-motion: reduce), (max-width: 700px)');
     const update = () => setReduced(query.matches || navigator.connection?.saveData === true);
     query.addEventListener('change', update);
     return () => query.removeEventListener('change', update);
