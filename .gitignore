@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.agents/
+.vercel/
+artifacts/
+.sites-runtime/
+test-results/
+public/media/source-frames/
+assets/source-frames/
+assets/guitar-source-frames/
+assets/everaldo-reference.mp4
