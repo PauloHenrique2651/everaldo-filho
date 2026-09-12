@@ -7,7 +7,7 @@ try {
   const page=await browser.newPage({viewport:{width,height}});
   await page.goto('http://localhost:5173/',{waitUntil:'networkidle'});
   await page.evaluate(()=>document.fonts.ready);
-  for(const id of ['inicio','manifesto','metodo','aulas','escuta','sobre','duvidas','contato']) {
+  for(const id of ['inicio','transformacao','metodo','canto','studio','planos','escuta','sobre','duvidas','contato']) {
    await page.locator(`#${id}`).evaluate(el=>window.scrollTo({top:el.getBoundingClientRect().top+scrollY-80,behavior:'instant'}));
    await page.waitForFunction(()=>[...document.querySelectorAll('.hero-scene')].every(el=>getComputedStyle(el).opacity===(el.classList.contains('is-hidden')?'0':'1')));
    await page.screenshot({path:`artifacts/${device}-${id}.png`,animations:'disabled'});

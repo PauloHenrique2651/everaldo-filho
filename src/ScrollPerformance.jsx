@@ -57,9 +57,11 @@ export default function ScrollPerformance({ sectionRef, reduced, onSceneChange }
         const nearest = [...decoded.keys()].reduce((a,b) => Math.abs(a-wanted)<=Math.abs(b-wanted)?a:b);
         const bitmap = decoded.get(nearest);
         if (nearest !== lastDrawn) {
-          const scale = Math.max(width/bitmap.width, height/bitmap.height);
+          const contain = matchMedia('(min-width: 801px) and (max-height: 760px)').matches;
+          const scale = (contain ? Math.min : Math.max)(width/bitmap.width, height/bitmap.height);
           const w = bitmap.width*scale, h = bitmap.height*scale;
-          context.drawImage(bitmap,(width-w)/2,(height-h)/2,w,h);
+          context.clearRect(0,0,width,height);
+          context.drawImage(bitmap,contain ? width-w : (width-w)/2,(height-h)/2,w,h);
           canvas.style.opacity = '1';
           canvas.dataset.frame = String(nearest);
           lastDrawn = nearest;

@@ -37,7 +37,7 @@ try {
  assert.equal(contact.pathname,'/5521975769161');
  assert.match(contact.searchParams.get('text'),/Canto.*Já tenho alguma experiência.*cantar rock com mais controle/);
  results.push('Contact message correctly contains interest, level and goal; no message sent.');
- const singingFaq=page.getByRole('button',{name:/Também posso fazer aulas de canto/});
+ const singingFaq=page.getByRole('button',{name:/Posso assistir pelo celular/});
  await singingFaq.click();
  assert.equal(await singingFaq.getAttribute('aria-expanded'),'true');
  await page.getByRole('button',{name:'Ativar som de fundo',exact:true}).click();
@@ -54,7 +54,7 @@ try {
  const brokenAnchors=await page.locator('a[href^="#"]').evaluateAll(links=>links.filter(a=>!document.getElementById(a.getAttribute('href').slice(1))).map(a=>a.outerHTML));
  assert.deepEqual(brokenAnchors,[]);
  results.push('All internal anchor targets exist.');
- for(const width of [1440,768,390,320]) {
+ for(const width of [1440,1280,768,430,412,390,375,360]) {
   await page.setViewportSize({width,height:844});
   await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
@@ -69,7 +69,7 @@ try {
    await page.keyboard.press('Escape');
    assert.equal(await page.locator('#mobile-menu').count(),0);
    await page.getByRole('button',{name:'Abrir menu',exact:true}).click();
-   await page.getByRole('navigation',{name:'Navegação móvel'}).getByRole('link',{name:'Aulas',exact:true}).click();
+   await page.getByRole('navigation',{name:'Navegação móvel'}).getByRole('link',{name:'Planos',exact:true}).click();
    assert.equal(await page.locator('#mobile-menu').count(),0);
    await page.screenshot({path:'artifacts/mobile-lessons.png'});
   }
