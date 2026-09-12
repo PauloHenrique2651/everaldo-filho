@@ -85,13 +85,13 @@ try {
  results.push('The guitar transition reaches later frames before the method section.');
  const mobile=await browser.newContext({viewport:{width:390,height:844}});
  const mobilePage=await mobile.newPage();
+ const mobileFrameRequests=[];mobilePage.on('request',r=>{if(/\/(?:guitar-)?frames(?:-mobile)?\//.test(r.url()))mobileFrameRequests.push(r.url());});
  await mobilePage.goto('http://localhost:5173/',{waitUntil:'networkidle'});
- await mobilePage.waitForFunction(()=>document.querySelector('canvas').dataset.frame==='0');
+ assert.equal(await mobilePage.locator('.hero-scroll').evaluate(el=>el.classList.contains('is-static')),true);
+ assert.equal(await mobilePage.locator('.hero-scroll').evaluate(el=>el.offsetHeight),844);
  await mobilePage.screenshot({path:'artifacts/mobile-hero.png'});
- const mobileDistance=await mobilePage.locator('.hero-scroll').evaluate(el=>el.offsetHeight-el.querySelector('.hero').offsetHeight);
- await mobilePage.evaluate(y=>window.scrollTo({top:y,behavior:'instant'}),mobileDistance);
- await mobilePage.waitForFunction(()=>document.querySelector('canvas').dataset.frame==='99');
- results.push('Mobile sequence uses its full 100 frames before the sticky section ends.');
+ assert.equal(mobileFrameRequests.length,0);
+ results.push('Mobile uses static art direction with no frame decoding during scrolling.');
  await mobile.close();
  const reduced=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
  const reducedPage=await reduced.newPage();

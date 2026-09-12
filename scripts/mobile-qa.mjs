@@ -8,6 +8,8 @@ try {
     page.on('pageerror', e => errors.push(e.message));
     await page.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
+    assert.equal(await page.locator('.hero-scroll').evaluate(el => el.classList.contains('is-static')), true);
+    assert.equal(await page.locator('.story-beat').evaluateAll(items => items.every(el => getComputedStyle(el).visibility === 'visible')), true);
     for (const id of ['inicio', 'transformacao', 'metodo', 'canto', 'studio', 'planos', 'contato', 'duvidas']) {
       await page.locator(`#${id}`).evaluate(el => scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: 'instant' }));
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${width}: ${id} overflow`);
